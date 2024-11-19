@@ -1,14 +1,13 @@
 <?php
+// Previous PHP code remains unchanged until the form section
 include 'includes/config.php';
 session_start();
 
-// Check if the user is authenticated
 if (!isset($_SESSION['admin_authenticated'])) {
     header('Location: admin.php');
     exit();
 }
 
-// Get company and DBA names separately
 $current_domain = $_SERVER['HTTP_HOST'];
 $stmt = $conn->prepare("SELECT company_name, dba_name FROM domain_mappings WHERE domain_name = ?");
 $stmt->bind_param("s", $current_domain);
@@ -20,25 +19,21 @@ if ($result->num_rows > 0) {
     $companyName = $row['company_name'];
     $dbaName = $row['dba_name'];
 } else {
-    // Fallback to settings table if no domain mapping found
     $stmt = $conn->prepare("SELECT setting_value FROM settings WHERE setting_name = 'CompanyName'");
     $stmt->execute();
     $result = $stmt->get_result();
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $companyName = $row['setting_value'];
-        $dbaName = $companyName; // Default DBA to company name if not found
+        $dbaName = $companyName;
     } else {
-        $companyName = 'Company Name'; // Default fallback
-        $dbaName = 'Company Name'; // Default fallback
+        $companyName = 'Company Name';
+        $dbaName = 'Company Name';
     }
 }
 
-// Get current date and time
 $currentDate = date('l, F j, Y');
 $currentTime = date('g:i A');
-
-// Get the current domain
 $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
 $fullDomain = $_SERVER['HTTP_HOST'];
 ?>
@@ -80,7 +75,7 @@ $fullDomain = $_SERVER['HTTP_HOST'];
     <nav class="navbar">
         <a href="index.php" class="navbar-brand">
             <i class="fas fa-bullhorn"></i>
-            <?php echo htmlspecialchars($companyName); ?>
+            <?php echo htmlspecialchars($companyName); ?> DBA <?php echo htmlspecialchars($dbaName); ?>
         </a>
         <ul class="nav-links">
             <li><a href="index.php" class="nav-home"><i class="fas fa-home"></i> Home</a></li>
@@ -102,10 +97,11 @@ $fullDomain = $_SERVER['HTTP_HOST'];
             <div class="card-body">
                 <h3 class="card-title">Campaign Information</h3>
                 <form id="campaignForm">
+                    <!-- A2P Brand -->
                     <div class="form-group">
                         <label for="companyName">Company Name:</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="companyName" name="companyName" value="<?php echo htmlspecialchars($companyName); ?>" required>
+                            <input type="text" class="form-control" id="companyName" name="companyName" value="<?php echo htmlspecialchars($companyName); ?>" readonly>
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary btn-copy" type="button" onclick="copyToClipboard('companyName')">
                                     <i class="fas fa-copy"></i>
@@ -117,7 +113,7 @@ $fullDomain = $_SERVER['HTTP_HOST'];
                     <div class="form-group">
                         <label for="dbaName">DBA Company Name:</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="dbaName" name="dbaName" value="<?php echo htmlspecialchars($dbaName); ?>" required>
+                            <input type="text" class="form-control" id="dbaName" name="dbaName" value="<?php echo htmlspecialchars($dbaName); ?>" readonly>
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary btn-copy" type="button" onclick="copyToClipboard('dbaName')">
                                     <i class="fas fa-copy"></i>
@@ -126,23 +122,12 @@ $fullDomain = $_SERVER['HTTP_HOST'];
                             <span class="copy-feedback">Copied!</span>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="domain">Domain:</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="domain" name="domain" value="<?php echo htmlspecialchars($fullDomain); ?>" required>
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary btn-copy" type="button" onclick="copyToClipboard('domain')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                            </div>
-                            <span class="copy-feedback">Copied!</span>
-                        </div>
-                    </div>
 
+                    <!-- Campaign Description -->
                     <div class="form-group">
                         <label for="description">Description:</label>
                         <div class="input-group">
-                            <textarea class="form-control" id="description" name="description" rows="6" readonly>We are <?php echo htmlspecialchars($companyName); ?> and are doing DBA as <?php echo htmlspecialchars($dbaName); ?>. This campaign sends appointment confirmations, message notifications, and offers for technical services to existing clients or new clients who have opted in to receive SMS notifications. The communications are sent via the website form.
+                            <textarea class="form-control" id="description" name="description" rows="10" readonly>We are <?php echo htmlspecialchars($companyName); ?> and are doing DBA as <?php echo htmlspecialchars($dbaName); ?>. This campaign sends appointment confirmations, message notifications, and offers for technical services to existing clients or new clients who have opted in to receive SMS notifications. The communications are sent via the website form.
 
 Privacy Policy: https://<?php echo htmlspecialchars($fullDomain); ?>/privacy_policy.php
 Terms of Service: https://<?php echo htmlspecialchars($fullDomain); ?>/terms_of_service.php
@@ -158,6 +143,7 @@ Unsubscribe: https://<?php echo htmlspecialchars($fullDomain); ?>/unsubscribe.ph
                         </div>
                     </div>
 
+                    <!-- Message Samples -->
                     <h4 class="mt-4">Message Samples</h4>
                     <div class="form-group">
                         <label for="sample1">Message Sample #1 (Appointment Confirmation):</label>
@@ -220,111 +206,14 @@ Unsubscribe: https://<?php echo htmlspecialchars($fullDomain); ?>/unsubscribe.ph
                         </div>
                     </div>
 
-                    <h4 class="mt-4">Generated URLs</h4>
-                    <div class="form-group">
-                        <label>Privacy Policy URL:</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="privacyUrl" readonly>
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary btn-copy" type="button" onclick="copyToClipboard('privacyUrl')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                            </div>
-                            <span class="copy-feedback">Copied!</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Terms of Service URL:</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="tosUrl" readonly>
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary btn-copy" type="button" onclick="copyToClipboard('tosUrl')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                            </div>
-                            <span class="copy-feedback">Copied!</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Subscribe/Unsubscribe Options URL:</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="optionsUrl" readonly>
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary btn-copy" type="button" onclick="copyToClipboard('optionsUrl')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                            </div>
-                            <span class="copy-feedback">Copied!</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Subscribe URL:</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="subscribeUrl" readonly>
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary btn-copy" type="button" onclick="copyToClipboard('subscribeUrl')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                            </div>
-                            <span class="copy-feedback">Copied!</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Unsubscribe URL:</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="unsubscribeUrl" readonly>
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary btn-copy" type="button" onclick="copyToClipboard('unsubscribeUrl')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                            </div>
-                            <span class="copy-feedback">Copied!</span>
-                        </div>
-                    </div>
-
+                    <!-- End User Consent Information -->
                     <h4 class="mt-4">End User Consent Information</h4>
                     <div class="form-group">
-                        <label>Opt-out Message:</label>
+                        <label for="userConsent">How do end-users consent to receive messages? (40-2048 characters):</label>
                         <div class="input-group">
-                            <textarea class="form-control" id="optOutMessage" rows="2" readonly>You have successfully been unsubscribed. You will not receive any more messages from this number. Reply START to resubscribe.</textarea>
+                            <textarea class="form-control" id="userConsent" name="userConsent" rows="4" readonly>End users opt-in by visiting <?php echo htmlspecialchars($fullDomain); ?>/subscribe.php and adding their phone number. They then check a box agreeing to receive text messages from <?php echo htmlspecialchars($companyName); ?> dba <?php echo htmlspecialchars($dbaName); ?>. Opt-in occurs after end users create an account; see form at (<?php echo htmlspecialchars($fullDomain); ?>/subscribe.php).</textarea>
                             <div class="input-group-append">
-                                <button class="btn btn-outline-secondary btn-copy h-100" type="button" onclick="copyToClipboard('optOutMessage')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                            </div>
-                            <span class="copy-feedback">Copied!</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Opt-out Keywords:</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="optOutKeywords" value="CANCEL, END, QUIT, UNSUBSCRIBE, STOP, STOPALL" readonly>
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary btn-copy" type="button" onclick="copyToClipboard('optOutKeywords')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                            </div>
-                            <span class="copy-feedback">Copied!</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Help Message:</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="helpMessage" value="Reply STOP to unsubscribe. Msg&Data Rates May Apply." readonly>
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary btn-copy" type="button" onclick="copyToClipboard('helpMessage')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                            </div>
-                            <span class="copy-feedback">Copied!</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Help Keywords:</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="helpKeywords" value="HELP, INFO" readonly>
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary btn-copy" type="button" onclick="copyToClipboard('helpKeywords')">
+                                <button class="btn btn-outline-secondary btn-copy h-100" type="button" onclick="copyToClipboard('userConsent')">
                                     <i class="fas fa-copy"></i>
                                 </button>
                             </div>
@@ -332,7 +221,33 @@ Unsubscribe: https://<?php echo htmlspecialchars($fullDomain); ?>/unsubscribe.ph
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Generate Template</button>
+                    <!-- Keywords and Messages -->
+                    <div class="form-group">
+                        <label for="optInKeywords">Opt-in Keywords (max 255 characters):</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="optInKeywords" value="START" readonly>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary btn-copy" type="button" onclick="copyToClipboard('optInKeywords')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <span class="copy-feedback">Copied!</span>
+                        </div>
+                    </div>
+
+                    <!-- Opt-in Message field -->
+                    <div class="form-group">
+                        <label for="optInMessage">Opt-in Message (20-320 characters):</label>
+                        <div class="input-group">
+                            <textarea class="form-control" id="optInMessage" name="optInMessage" rows="2" readonly><?php echo htmlspecialchars($dbaName); ?>: You are now opted-in. For help, reply HELP. To opt-out, reply STOP</textarea>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary btn-copy h-100" type="button" onclick="copyToClipboard('optInMessage')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <span class="copy-feedback">Copied!</span>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -342,21 +257,15 @@ Unsubscribe: https://<?php echo htmlspecialchars($fullDomain); ?>/unsubscribe.ph
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-        // Call updateUrls on page load to initialize URLs
         $(document).ready(function() {
-            updateUrls();
             updateMessageSamples();
+            updateOptInMessage();
         });
 
-        function updateUrls() {
-            const domain = $('#domain').val();
-            if (domain) {
-                $('#privacyUrl').val(`https://${domain}/privacy_policy.php`);
-                $('#tosUrl').val(`https://${domain}/terms_of_service.php`);
-                $('#optionsUrl').val(`https://${domain}/index.php`);
-                $('#subscribeUrl').val(`https://${domain}/subscribe.php`);
-                $('#unsubscribeUrl').val(`https://${domain}/unsubscribe.php`);
-            }
+        function updateOptInMessage() {
+            const dbaName = $('#dbaName').val();
+            const optInMessage = $('#optInMessage');
+            optInMessage.val(`${dbaName}: You are now opted-in. For help, reply HELP. To opt-out, reply STOP`);
         }
 
         function updateMessageSamples() {
@@ -371,7 +280,6 @@ Unsubscribe: https://<?php echo htmlspecialchars($fullDomain); ?>/unsubscribe.ph
             const element = document.getElementById(elementId);
             const feedbackElement = element.parentElement.querySelector('.copy-feedback');
             
-            // Create a temporary textarea for copying if the element is not an input/textarea
             if (element.tagName.toLowerCase() !== 'textarea' && element.tagName.toLowerCase() !== 'input') {
                 const textarea = document.createElement('textarea');
                 textarea.value = element.textContent;
@@ -384,13 +292,11 @@ Unsubscribe: https://<?php echo htmlspecialchars($fullDomain); ?>/unsubscribe.ph
                 document.execCommand('copy');
             }
             
-            // Show feedback
             feedbackElement.classList.add('show');
             setTimeout(() => {
                 feedbackElement.classList.remove('show');
             }, 1000);
 
-            // Update button icon temporarily
             const button = event.currentTarget;
             const icon = button.querySelector('i');
             const originalClass = icon.className;
@@ -400,83 +306,9 @@ Unsubscribe: https://<?php echo htmlspecialchars($fullDomain); ?>/unsubscribe.ph
             }, 1000);
         }
 
-        $('#domain').on('input', updateUrls);
-        $('#dbaName').on('input', updateMessageSamples);
-
-        $('#campaignForm').on('submit', function(e) {
-            e.preventDefault();
-            const companyName = $('#companyName').val();
-            const dbaName = $('#dbaName').val();
-            const domain = $('#domain').val();
-            const description = $('#description').val();
-
-            // Generate the template text
-            const template = `A2P 10DLC Campaign Template
-Campaign Information
-Description
-${description}
-
-Privacy Policy: https://${domain}/privacy_policy.php
-Terms of Service: https://${domain}/terms_of_service.php
-Subscribe and Unsubscribe options displayed to users: https://${domain}/index.php
-Subscribe: https://${domain}/subscribe.php
-Unsubscribe: https://${domain}/unsubscribe.php
-
-Sending messages with embedded links?
-No
-
-Sending messages with embedded phone numbers?
-No
-
-Sending messages with age-gated content?
-No
-
-Sending messages with content related to direct lending or other loan arrangements?
-No
-
-Message Samples
-Message Sample #1
-David, it's Kelly from ${dbaName}. Thanks for opting in to receive SMS notifications. I just saved a time for you on <?php echo $currentDate; ?>, at <?php echo $currentTime; ?>, and I'll see you then! If anything changes, just let me know. If you need to opt out, reply STOP.
-
-Message Sample #2
-David, it's Kelly from ${dbaName}. Thanks for opting in to receive messages. Today, we are giving out a few vouchers to our past clients for a free cyber security scan. Would you like one? If you need to opt out, reply STOP.
-
-Message Sample #3
-David, it's Kelly from ${dbaName}. Thanks for opting in to receive our messages. We're offering a free consultation to help optimize your business. Would you like to schedule a time? If you need to opt out, reply STOP.
-
-Message Sample #4
-David, it's Kelly from ${dbaName}. Thanks for subscribing to our updates! We've noticed an increase in cyber threats this month. Would you like a free guide on how to protect your business? If you need to opt out, reply STOP.
-
-Message Sample #5
-David, it's Kelly from ${dbaName}. Thanks for opting in to receive SMS alerts! We just launched a new service for automated backup solutions. Can I send you more info? If you need to opt out, reply STOP.
-
-End User Consent
-Twilio manages opt-out and help keywords for you by default.
-
-How do end-users consent to receive messages?
-End users complete a form at https://${domain}/ that states OPT IN CONSENT: "By submitting your phone number, you are authorizing us to send you text messages and notifications. Message and data rates apply. Reply STOP to unsubscribe to a message sent from us." End users can unsubscribe via the same page by entering their phone number or replying STOP.
-
-Opt-out Message
-You have successfully been unsubscribed. You will not receive any more messages from this number. Reply START to resubscribe.
-
-Opt-out Keywords
-CANCEL, END, QUIT, UNSUBSCRIBE, STOP, STOPALL
-
-Help Message
-Reply STOP to unsubscribe. Msg&Data Rates May Apply.
-
-Help Keywords
-HELP, INFO`;
-
-            // Create a temporary textarea to copy the template
-            const textarea = document.createElement('textarea');
-            textarea.value = template;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-
-            alert('Template has been generated and copied to clipboard!');
+        $('#dbaName').on('input', function() {
+            updateMessageSamples();
+            updateOptInMessage();
         });
     </script>
 </body>
