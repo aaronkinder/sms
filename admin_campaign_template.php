@@ -139,6 +139,25 @@ $fullDomain = $_SERVER['HTTP_HOST'];
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        <label for="description">Description:</label>
+                        <div class="input-group">
+                            <textarea class="form-control" id="description" name="description" rows="6" readonly>We are <?php echo htmlspecialchars($companyName); ?> and are doing DBA as <?php echo htmlspecialchars($dbaName); ?>. This campaign sends appointment confirmations, message notifications, and offers for technical services to existing clients or new clients who have opted in to receive SMS notifications. The communications are sent via the website form.
+
+Privacy Policy: https://<?php echo htmlspecialchars($fullDomain); ?>/privacy_policy.php
+Terms of Service: https://<?php echo htmlspecialchars($fullDomain); ?>/terms_of_service.php
+Subscribe and Unsubscribe options displayed to users: https://<?php echo htmlspecialchars($fullDomain); ?>/index.php
+Subscribe: https://<?php echo htmlspecialchars($fullDomain); ?>/subscribe.php
+Unsubscribe: https://<?php echo htmlspecialchars($fullDomain); ?>/unsubscribe.php</textarea>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary btn-copy h-100" type="button" onclick="copyToClipboard('description')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <span class="copy-feedback">Copied!</span>
+                        </div>
+                    </div>
+
                     <h4 class="mt-4">Message Samples</h4>
                     <div class="form-group">
                         <label for="sample1">Message Sample #1 (Appointment Confirmation):</label>
@@ -389,12 +408,13 @@ $fullDomain = $_SERVER['HTTP_HOST'];
             const companyName = $('#companyName').val();
             const dbaName = $('#dbaName').val();
             const domain = $('#domain').val();
+            const description = $('#description').val();
 
             // Generate the template text
             const template = `A2P 10DLC Campaign Template
 Campaign Information
 Description
-We are ${companyName} and are doing DBA as ${dbaName}. This campaign sends appointment confirmations, message notifications, and offers for technical services to existing clients or new clients who have opted in to receive SMS notifications. The communications are sent via the website form.
+${description}
 
 Privacy Policy: https://${domain}/privacy_policy.php
 Terms of Service: https://${domain}/terms_of_service.php
