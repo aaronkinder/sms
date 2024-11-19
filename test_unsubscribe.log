@@ -1,0 +1,552 @@
+[2024-10-19 02:19:56] Test unsubscribe process started
+[2024-10-19 02:19:56] Inserting test subscriber
+[2024-10-19 02:19:56] Test subscriber inserted successfully
+[2024-10-19 02:19:56] Verifying subscriber exists
+[2024-10-19 02:19:56] Subscriber exists in the database
+[2024-10-19 02:19:56] Simulating unsubscribe process
+[2024-10-19 02:21:25] Test unsubscribe process started
+[2024-10-19 02:21:25] Inserting test subscriber
+[2024-10-19 02:21:25] Test subscriber inserted successfully
+[2024-10-19 02:21:25] Verifying subscriber exists
+[2024-10-19 02:21:25] Subscriber exists in the database
+[2024-10-19 02:21:25] Simulating unsubscribe process
+[2024-10-19 02:21:25] CAPTCHA answer: 12
+[2024-10-19 02:21:25] First POST request output: 
+
+
+    
+    
+    Unsubscribe from KRS1 Marketing
+    
+    
+
+
+    
+        Unsubscribe from KRS1 Marketing
+                        
+            Are you sure you want to unsubscribe test@example.com from KRS1 marketing messages?
+        
+        
+            
+            
+            
+            Confirm Unsubscribe
+            Cancel
+        
+                Back to Subscription Page
+    
+
+    
+    
+    
+
+
+
+[2024-10-19 02:21:25] Second POST request output: 
+
+
+    
+    
+    Unsubscribe from KRS1 Marketing
+    
+    
+
+
+    
+        Unsubscribe from KRS1 Marketing
+                        
+            Are you sure you want to unsubscribe test@example.com from KRS1 marketing messages?
+        
+        
+            
+            
+            
+            Confirm Unsubscribe
+            Cancel
+        
+                Back to Subscription Page
+    
+
+    
+    
+    
+
+
+
+
+
+    
+    
+    Unsubscribe from KRS1 Marketing
+    
+    
+
+
+    
+        Unsubscribe from KRS1 Marketing
+        You have been successfully unsubscribed.                
+            
+                Enter your Phone Number or Email Address:
+                
+            
+            
+                CAPTCHA: 5 + 8 = ?
+                
+            
+            Unsubscribe
+        
+                Back to Subscription Page
+    
+
+    
+    
+    
+
+
+
+[2024-10-19 02:21:25] Verifying subscriber was removed
+[2024-10-19 02:21:25] Failed to remove subscriber from the database
+[2024-10-19 02:21:25] Test unsubscribe process completed
+[2024-10-19 02:22:12] Test unsubscribe process started
+[2024-10-19 02:22:12] Inserting test subscriber
+[2024-10-19 02:22:12] Test subscriber inserted successfully
+[2024-10-19 02:22:12] Verifying subscriber exists
+[2024-10-19 02:22:12] Checking subscriber existence. Query: SELECT id FROM subscribers WHERE email = ? OR phone = ?, Params: test@example.com, Result: exists
+[2024-10-19 02:22:12] Subscriber exists in the database
+[2024-10-19 02:22:12] Simulating unsubscribe process
+[2024-10-19 02:22:12] CAPTCHA answer: 16
+[2024-10-19 02:22:12] First POST request output: 
+
+
+    
+    
+    Unsubscribe from KRS1 Marketing
+    
+    
+
+
+    
+        Unsubscribe from KRS1 Marketing
+                        
+            Are you sure you want to unsubscribe test@example.com from KRS1 marketing messages?
+        
+        
+            
+            
+            
+            Confirm Unsubscribe
+            Cancel
+        
+                Back to Subscription Page
+    
+
+    
+    
+    
+
+
+
+[2024-10-19 02:22:12] Second POST request output: 
+
+
+    
+    
+    Unsubscribe from KRS1 Marketing
+    
+    
+
+
+    
+        Unsubscribe from KRS1 Marketing
+                        
+            Are you sure you want to unsubscribe test@example.com from KRS1 marketing messages?
+        
+        
+            
+            
+            
+            Confirm Unsubscribe
+            Cancel
+        
+                Back to Subscription Page
+    
+
+    
+    
+    
+
+
+
+
+
+    
+    
+    Unsubscribe from KRS1 Marketing
+    
+    
+
+
+    
+        Unsubscribe from KRS1 Marketing
+        You have been successfully unsubscribed.                
+            
+                Enter your Phone Number or Email Address:
+                
+            
+            
+                CAPTCHA: 2 + 9 = ?
+                
+            
+            Unsubscribe
+        
+                Back to Subscription Page
+    
+
+    
+    
+    
+
+
+
+[2024-10-19 02:22:14] Database contents: Array
+(
+    [0] => Array
+        (
+            [id] => 1
+            [first_name] => Aaron
+            [last_name] => Kinder
+            [phone] => +13135054496
+            [email] => aaron@aaronkinder.com
+            [ip_address] => 127.0.0.1
+            [subscribed_at] => 2024-10-18 21:43:18
+        )
+
+    [1] => Array
+        (
+            [id] => 2
+            [first_name] => Robert
+            [last_name] => Muller
+            [phone] => +15551212556
+            [email] => test@test.com
+            [ip_address] => 127.0.0.1
+            [subscribed_at] => 2024-10-18 21:52:56
+        )
+
+    [2] => Array
+        (
+            [id] => 3
+            [first_name] => Big
+            [last_name] => Dog
+            [phone] => +13332221111
+            [email] => thisis@bigdog.com
+            [ip_address] => 127.0.0.1
+            [subscribed_at] => 2024-10-18 21:54:19
+        )
+
+    [3] => Array
+        (
+            [id] => 12
+            [first_name] => John
+            [last_name] => Doe
+            [phone] => +11234567890
+            [email] => test@example.com
+            [ip_address] => 127.0.0.1
+            [subscribed_at] => 2024-10-18 22:21:25
+        )
+
+    [4] => Array
+        (
+            [id] => 13
+            [first_name] => John
+            [last_name] => Doe
+            [phone] => +11234567890
+            [email] => test@example.com
+            [ip_address] => 127.0.0.1
+            [subscribed_at] => 2024-10-18 22:22:12
+        )
+
+)
+
+[2024-10-19 02:22:14] Verifying subscriber was removed
+[2024-10-19 02:22:14] Checking subscriber existence. Query: SELECT id FROM subscribers WHERE email = ? OR phone = ?, Params: test@example.com, Result: exists
+[2024-10-19 02:22:14] Failed to remove subscriber from the database
+[2024-10-19 02:22:14] Test unsubscribe process completed
+[2024-10-19 02:23:11] Test unsubscribe process started
+[2024-10-19 02:23:11] Inserting test subscriber
+[2024-10-19 02:23:11] Test subscriber inserted successfully
+[2024-10-19 02:23:11] Verifying subscriber exists
+[2024-10-19 02:23:11] Checking subscriber existence. Query: SELECT id FROM subscribers WHERE email = ? OR phone = ?, Params: test@example.com, Result: exists
+[2024-10-19 02:23:11] Subscriber exists in the database
+[2024-10-19 02:23:11] Simulating unsubscribe process
+[2024-10-19 02:23:11] CAPTCHA answer: 14
+[2024-10-19 02:23:11] First POST request output: 
+
+
+    
+    
+    Unsubscribe from KRS1 Marketing
+    
+    
+
+
+    
+        Unsubscribe from KRS1 Marketing
+                        
+            Are you sure you want to unsubscribe test@example.com from KRS1 marketing messages?
+        
+        
+            
+            
+            
+            Confirm Unsubscribe
+            Cancel
+        
+                Back to Subscription Page
+    
+
+    
+    
+    
+
+
+
+[2024-10-19 02:23:11] Second POST request output: 
+
+
+    
+    
+    Unsubscribe from KRS1 Marketing
+    
+    
+
+
+    
+        Unsubscribe from KRS1 Marketing
+                        
+            Are you sure you want to unsubscribe test@example.com from KRS1 marketing messages?
+        
+        
+            
+            
+            
+            Confirm Unsubscribe
+            Cancel
+        
+                Back to Subscription Page
+    
+
+    
+    
+    
+
+
+
+
+
+    
+    
+    Unsubscribe from KRS1 Marketing
+    
+    
+
+
+    
+        Unsubscribe from KRS1 Marketing
+        You have been successfully unsubscribed.                
+            
+                Enter your Phone Number or Email Address:
+                
+            
+            
+                CAPTCHA: 10 + 6 = ?
+                
+            
+            Unsubscribe
+        
+                Back to Subscription Page
+    
+
+    
+    
+    
+
+
+
+[2024-10-19 02:23:13] Database contents: Array
+(
+    [0] => Array
+        (
+            [id] => 1
+            [first_name] => Aaron
+            [last_name] => Kinder
+            [phone] => +13135054496
+            [email] => aaron@aaronkinder.com
+            [ip_address] => 127.0.0.1
+            [subscribed_at] => 2024-10-18 21:43:18
+        )
+
+    [1] => Array
+        (
+            [id] => 2
+            [first_name] => Robert
+            [last_name] => Muller
+            [phone] => +15551212556
+            [email] => test@test.com
+            [ip_address] => 127.0.0.1
+            [subscribed_at] => 2024-10-18 21:52:56
+        )
+
+    [2] => Array
+        (
+            [id] => 3
+            [first_name] => Big
+            [last_name] => Dog
+            [phone] => +13332221111
+            [email] => thisis@bigdog.com
+            [ip_address] => 127.0.0.1
+            [subscribed_at] => 2024-10-18 21:54:19
+        )
+
+)
+
+[2024-10-19 02:23:13] Verifying subscriber was removed
+[2024-10-19 02:23:13] Checking subscriber existence. Query: SELECT id FROM subscribers WHERE email = ? OR phone = ?, Params: test@example.com, Result: does not exist
+[2024-10-19 02:23:13] Subscriber was successfully removed from the database
+[2024-10-19 02:23:13] Test unsubscribe process completed
+[2024-10-19 02:27:46] Test unsubscribe process started
+[2024-10-19 02:27:46] Inserting test subscriber
+[2024-10-19 02:27:46] Test subscriber inserted successfully
+[2024-10-19 02:27:46] Verifying subscriber exists
+[2024-10-19 02:27:46] Checking subscriber existence. Query: SELECT id FROM subscribers WHERE email = ? OR phone = ?, Params: +11234567890, Result: exists
+[2024-10-19 02:27:46] Subscriber exists in the database
+[2024-10-19 02:27:46] Simulating unsubscribe process
+[2024-10-19 02:27:46] CAPTCHA answer: 10
+[2024-10-19 02:27:46] First POST request output: 
+
+
+    
+    
+    Unsubscribe from KRS1 Marketing
+    
+    
+
+
+    
+        Unsubscribe from KRS1 Marketing
+                        
+            Are you sure you want to unsubscribe +11234567890 from KRS1 marketing messages?
+        
+        
+            
+            
+            
+            Confirm Unsubscribe
+            Cancel
+        
+                Back to Subscription Page
+    
+
+    
+    
+    
+
+
+
+[2024-10-19 02:27:46] Second POST request output: 
+
+
+    
+    
+    Unsubscribe from KRS1 Marketing
+    
+    
+
+
+    
+        Unsubscribe from KRS1 Marketing
+                        
+            Are you sure you want to unsubscribe +11234567890 from KRS1 marketing messages?
+        
+        
+            
+            
+            
+            Confirm Unsubscribe
+            Cancel
+        
+                Back to Subscription Page
+    
+
+    
+    
+    
+
+
+
+
+
+    
+    
+    Unsubscribe from KRS1 Marketing
+    
+    
+
+
+    
+        Unsubscribe from KRS1 Marketing
+        You have been successfully unsubscribed.                
+            
+                Enter your Phone Number or Email Address:
+                
+                    
+                        +1
+                    
+                    
+                
+                For phone numbers, enter 10 digits without +1 or any other characters.
+            
+            
+                CAPTCHA: 4 + 9 = ?
+                
+            
+            Unsubscribe
+        
+                Back to Subscription Page
+    
+
+    
+    
+    
+
+
+
+[2024-10-19 02:27:48] Database contents: Array
+(
+    [0] => Array
+        (
+            [id] => 2
+            [first_name] => Robert
+            [last_name] => Muller
+            [phone] => +15551212556
+            [email] => test@test.com
+            [ip_address] => 127.0.0.1
+            [subscribed_at] => 2024-10-18 21:52:56
+        )
+
+    [1] => Array
+        (
+            [id] => 3
+            [first_name] => Big
+            [last_name] => Dog
+            [phone] => +13332221111
+            [email] => thisis@bigdog.com
+            [ip_address] => 127.0.0.1
+            [subscribed_at] => 2024-10-18 21:54:19
+        )
+
+)
+
+[2024-10-19 02:27:48] Verifying subscriber was removed
+[2024-10-19 02:27:48] Checking subscriber existence. Query: SELECT id FROM subscribers WHERE email = ? OR phone = ?, Params: +11234567890, Result: does not exist
+[2024-10-19 02:27:48] Subscriber was successfully removed from the database
+[2024-10-19 02:27:48] Test unsubscribe process completed
