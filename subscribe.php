@@ -18,7 +18,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $last_name = sanitize_input($_POST['last_name']);
             $phone = sanitize_input($_POST['phone']);
             $email = sanitize_input($_POST['email']);
-            $opt_in = isset($_POST['opt_in']) ? 1 : 0;
+            $notification_consent = isset($_POST['notification_consent']) ? 1 : 0;
+            $marketing_consent = isset($_POST['marketing_consent']) ? 1 : 0;
+            $opt_in = ($notification_consent || $marketing_consent) ? 1 : 0;
 
             $formatted_phone = validate_and_format_phone($phone);
             if (!$formatted_phone) {
@@ -41,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $stmt->bind_param("sssss", $first_name, $last_name, $formatted_phone, $email, $ip_address);
 
                     if ($stmt->execute()) {
-                        $message = "<div class='alert alert-success'>Thank you for subscribing to " . htmlspecialchars($companyName) . " marketing messages.</div>";
+                        $message = "<div class='alert alert-success'>Thank you for subscribing to " . htmlspecialchars($companyName) . " messages.</div>";
                         update_submission_time($ip_address);
                     } else {
                         $message = "<div class='alert alert-danger'>Error: " . $stmt->error . "</div>";
@@ -49,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $stmt->close();
                 }
             } else {
-                $message = "<div class='alert alert-danger'>Please confirm that you agree to receive marketing information.</div>";
+                $message = "<div class='alert alert-danger'>Please select at least one type of consent to continue.</div>";
             }
         }
     }
@@ -64,6 +66,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .consent-box {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #f8f9fa;
+        }
+        .consent-header {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #dee2e6;
+        }
+        .consent-icon {
+            font-size: 1.2em;
+            margin-right: 8px;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -150,12 +172,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
 
                 <div class="legal-agreement">
-                    <div class="form-group form-check mb-2">
-                        <input type="checkbox" class="form-check-input" id="opt_in" name="opt_in" required>
-                        <label class="form-check-label" for="opt_in">
-                            <i class="fas fa-check-circle"></i> OPT IN CONSENT: By clicking the box, you are authorizing us to send you text messages and notifications including promotional and marketing messages. Message and data rates apply. Reply STOP to unsubscribe to a message sent from us. Reply HELP to get guidance.
-                        </label>
+                    <div class="consent-box">
+                        <div class="consent-header">
+                            <i class="fas fa-bell consent-icon text-primary"></i>
+                            Service Updates & Important Notifications
+                        </div>
+                        <div class="form-group form-check mb-2">
+                            <input type="checkbox" class="form-check-input" id="notification_consent" name="notification_consent">
+                            <label class="form-check-label" for="notification_consent">
+                                By clicking this box, you are authorizing us to send you text messages and notifications including service updates and important announcements. Message and data rates apply. Reply STOP to unsubscribe to a message sent from us. Reply HELP to get guidance.
+                            </label>
+                        </div>
                     </div>
+
+                    <div class="consent-box">
+                        <div class="consent-header">
+                            <i class="fas fa-bullhorn consent-icon text-success"></i>
+                            Marketing & Promotional Messages
+                        </div>
+                        <div class="form-group form-check mb-2">
+                            <input type="checkbox" class="form-check-input" id="marketing_consent" name="marketing_consent">
+                            <label class="form-check-label" for="marketing_consent">
+                                By clicking this box, you are authorizing us to send you text messages and notifications including promotional and marketing messages. Message and data rates apply. Reply STOP to unsubscribe to a message sent from us. Reply HELP to get guidance.
+                            </label>
+                        </div>
+                    </div>
+
                     <div class="form-text">
                         <i class="fas fa-info-circle"></i> By subscribing, you acknowledge that you have read and agree to our 
                         <a href="privacy_policy.php" target="_blank">Privacy Policy</a> and 
