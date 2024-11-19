@@ -61,17 +61,22 @@ function backup_database($db_host, $db_user, $db_pass, $db_name) {
     $htaccess_content = "Deny from all";
     file_put_contents($backup_dir . '.htaccess', $htaccess_content);
     
-    // Use Ubuntu's MySQL bin path
+    // Create temporary MySQL config file
+    $temp_cnf = tempnam(sys_get_temp_dir(), 'mysql');
+    $cnf_content = "[mysqldump]\nuser={$db_user}\npassword={$db_pass}\nhost={$db_host}";
+    file_put_contents($temp_cnf, $cnf_content);
+    chmod($temp_cnf, 0600); // Secure the config file
+    
+    // Use Ubuntu's MySQL bin path with config file
     $mysqldump_path = '/usr/bin/mysqldump';
     
-    // Build command
+    // Build command using the config file
     $command = sprintf(
-        '%s -h %s -u %s %s %s',
+        '%s --defaults-extra-file=%s %s > %s',
         $mysqldump_path,
-        escapeshellarg($db_host),
-        escapeshellarg($db_user),
-        empty($db_pass) ? '' : '-p' . escapeshellarg($db_pass),
-        escapeshellarg($db_name)
+        escapeshellarg($temp_cnf),
+        escapeshellarg($db_name),
+        escapeshellarg($backup_dir . $backup_file)
     );
     
     // Execute command and capture output
@@ -79,11 +84,11 @@ function backup_database($db_host, $db_user, $db_pass, $db_name) {
     $errors = '';
     $return_var = execute_command($command, $output, $errors);
     
-    if ($return_var === 0 && !empty($output)) {
-        // Write the output to file
-        if (file_put_contents($backup_dir . $backup_file, $output) !== false) {
-            return ['success' => true, 'message' => 'Database backup created successfully: ' . $backup_file];
-        }
+    // Remove temporary config file
+    unlink($temp_cnf);
+    
+    if ($return_var === 0 && file_exists($backup_dir . $backup_file)) {
+        return ['success' => true, 'message' => 'Database backup created successfully: ' . $backup_file];
     }
     
     $error_msg = !empty($errors) ? $errors : 'Unknown error occurred';
@@ -99,39 +104,31 @@ function restore_database($db_host, $db_user, $db_pass, $db_name, $backup_file) 
         return ['success' => false, 'message' => 'Backup file not found'];
     }
     
-    // Get backup file content
-    $sql_content = file_get_contents($full_path);
-    if ($sql_content === false) {
-        return ['success' => false, 'message' => 'Could not read backup file'];
-    }
+    // Create temporary MySQL config file
+    $temp_cnf = tempnam(sys_get_temp_dir(), 'mysql');
+    $cnf_content = "[mysql]\nuser={$db_user}\npassword={$db_pass}\nhost={$db_host}";
+    file_put_contents($temp_cnf, $cnf_content);
+    chmod($temp_cnf, 0600); // Secure the config file
     
     // Use Ubuntu's MySQL bin path
     $mysql_path = '/usr/bin/mysql';
     
-    // Build command
+    // Build command using the config file
     $command = sprintf(
-        '%s -h %s -u %s %s %s',
+        '%s --defaults-extra-file=%s %s < %s',
         $mysql_path,
-        escapeshellarg($db_host),
-        escapeshellarg($db_user),
-        empty($db_pass) ? '' : '-p' . escapeshellarg($db_pass),
-        escapeshellarg($db_name)
+        escapeshellarg($temp_cnf),
+        escapeshellarg($db_name),
+        escapeshellarg($full_path)
     );
-    
-    // Create a temporary file for the SQL input
-    $temp_file = tempnam('/tmp', 'mysql_restore_');
-    file_put_contents($temp_file, $sql_content);
-    
-    // Append input redirection to command
-    $command .= ' < ' . escapeshellarg($temp_file);
     
     // Execute command and capture output
     $output = '';
     $errors = '';
     $return_var = execute_command($command, $output, $errors);
     
-    // Clean up temp file
-    unlink($temp_file);
+    // Remove temporary config file
+    unlink($temp_cnf);
     
     if ($return_var === 0) {
         return ['success' => true, 'message' => 'Database restored successfully'];

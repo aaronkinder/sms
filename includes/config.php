@@ -110,4 +110,4 @@
         $stmt->bind_param("sii", $ip_address, $current_time, $current_time);
         $stmt->execute();
     }
-?>
+    ?>

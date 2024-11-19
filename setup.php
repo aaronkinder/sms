@@ -98,22 +98,27 @@ function updateConfigFile($db_host, $db_name, $db_user, $db_pass) {
     // Set charset to utf8mb4
     \$conn->set_charset(\"utf8mb4\");
 
-    // Function to get domain information
-    function getDomainInfo(\$domain_name) {
-        global \$conn;
-        \$stmt = \$conn->prepare(\"SELECT * FROM domain_mappings WHERE domain_name = ?\");
-        \$stmt->bind_param(\"s\", \$domain_name);
-        \$stmt->execute();
-        \$result = \$stmt->get_result();
-        if (\$result->num_rows > 0) {
-            return \$result->fetch_assoc();
-        }
-        return null;
-    }
-
-    // Function to get company name from settings
+    // Function to get company name based on current domain
     function getCompanyName() {
         global \$conn;
+        \$current_domain = \$_SERVER['HTTP_HOST'];
+        
+        // First try to get company name and DBA from domain mappings
+        \$stmt = \$conn->prepare(\"SELECT company_name, dba_name FROM domain_mappings WHERE domain_name = ?\");
+        \$stmt->bind_param(\"s\", \$current_domain);
+        \$stmt->execute();
+        \$result = \$stmt->get_result();
+        
+        if (\$result->num_rows > 0) {
+            \$row = \$result->fetch_assoc();
+            // If DBA exists, append it to company name
+            if (!empty(\$row['dba_name'])) {
+                return \$row['company_name'] . ' dba ' . \$row['dba_name'];
+            }
+            return \$row['company_name'];
+        }
+        
+        // Fallback to settings table if no domain mapping found
         \$stmt = \$conn->prepare(\"SELECT setting_value FROM settings WHERE setting_name = 'CompanyName'\");
         \$stmt->execute();
         \$result = \$stmt->get_result();
@@ -121,7 +126,8 @@ function updateConfigFile($db_host, $db_name, $db_user, $db_pass) {
             \$row = \$result->fetch_assoc();
             return \$row['setting_value'];
         }
-        return 'Company Name';
+        
+        return 'Company Name'; // Default fallback
     }
 
     // Function to sanitize user input
@@ -381,3 +387,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </script>
 </body>
 </html>
+<?php
+$conn->close();
+?>
