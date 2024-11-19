@@ -212,6 +212,7 @@ $dbManagerFile = ($currentOS === 'Ubuntu') ? 'db_manager_ubuntu.php' : 'db_manag
             <a href="?export=1" class="btn btn-success">Export to CSV</a>
             <a href="admin_domains.php" class="btn btn-primary">Manage Domains</a>
             <a href="<?php echo $dbManagerFile; ?>" class="btn btn-info">Database Manager</a>
+            <a href="admin_campaign_template.php" class="btn btn-warning"><i class="fas fa-file-alt"></i> A2P 10DLC Template</a>
             <a href="?logout=1" class="btn btn-danger float-right">Logout</a>
         </div>
         <div class="table-responsive">
@@ -247,7 +248,7 @@ $dbManagerFile = ($currentOS === 'Ubuntu') ? 'db_manager_ubuntu.php' : 'db_manag
                 </tbody>
             </table>
         </div>
-    </div>
+        </div>
 
     <!-- Edit Modal -->
     <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
